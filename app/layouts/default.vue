@@ -1,0 +1,19 @@
+<template>
+  <UContainer class="layout-container">
+    <main class="main-content">
+      <slot />
+    </main>
+  </UContainer>
+</template>
+
+<style scoped>
+.layout-container {
+  height: calc(100vh - 4rem);
+  background-color: var(--ui-primary);
+}
+
+.main-content {
+  height: 100%;
+  margin-top: 4rem;
+}
+</style>
