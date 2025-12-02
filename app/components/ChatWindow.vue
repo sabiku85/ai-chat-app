@@ -1,7 +1,53 @@
+<script setup lang="ts">
+const { chat, messages, sendMessage } = useChat();
+
+function handleSendMessage(message: string) {
+  sendMessage(message);
+}
+</script>
+
 <template>
-  <div ref="scrollContainer" class="scroll-container">
+  <div
+    ref="scrollContainer"
+    class="scroll-container"
+  >
     <UContainer class="chat-container">
-      <!-- ... -->
+      <div
+        v-if="!messages?.length"
+        class="empty-state"
+      >
+        <div class="empty-state-card">
+          <h2 class="empty-state-title">Start your chat</h2>
+          <ChatInput @send-message="handleSendMessage" />
+        </div>
+      </div>
+
+      <template v-else>
+        <div class="chat-header">
+          <h1 class="title">
+            {{ chat?.title || "Untitled Chat" }}
+          </h1>
+        </div>
+        <div class="messages-container">
+          <div
+            v-for="message in messages"
+            :key="message.id"
+            class="message"
+            :class="{
+              'message-user': message.role === 'user',
+              'message-ai': message.role === 'assistant',
+            }"
+          >
+            <div class="message-content">
+              {{ message.content }}
+            </div>
+          </div>
+        </div>
+
+        <div class="message-form-container">
+          <ChatInput @send-message="handleSendMessage" />
+        </div>
+      </template>
     </UContainer>
   </div>
 </template>
@@ -77,9 +123,7 @@
   position: fixed;
   bottom: 1.5rem;
   max-width: 800px;
-  width: calc(
-    100% - 3rem
-  ); /* Account for container padding */
+  width: calc(100% - 3rem); /* Account for container padding */
   z-index: 10;
 }
 
