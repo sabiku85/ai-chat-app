@@ -1,15 +1,24 @@
 <script setup lang="ts">
-const { chat, messages, sendMessage } = useChat()
+const { chat, messages, sendMessage } = useChat();
+const { showScrollButton, scrollToBottom, pinToBottom } = useChatScroll();
 
 function handleSendMessage(message: string) {
-  sendMessage(message)
+  sendMessage(message);
 }
+
+watch(() => messages.value, pinToBottom, { deep: true });
 </script>
 
 <template>
-  <div ref="scrollContainer" class="scroll-container">
+  <div
+    ref="scrollContainer"
+    class="scroll-container"
+  >
     <UContainer class="chat-container">
-      <div v-if="!messages?.length" class="empty-state">
+      <div
+        v-if="!messages?.length"
+        class="empty-state"
+      >
         <div class="empty-state-card">
           <h2 class="empty-state-title">Start your chat</h2>
           <ChatInput @send-message="handleSendMessage" />
@@ -19,7 +28,7 @@ function handleSendMessage(message: string) {
       <template v-else>
         <div class="chat-header">
           <h1 class="title">
-            {{ chat?.title || 'Untitled Chat' }}
+            {{ chat?.title || "Untitled Chat" }}
           </h1>
         </div>
         <div class="messages-container">
@@ -39,6 +48,16 @@ function handleSendMessage(message: string) {
         </div>
 
         <div class="message-form-container">
+          <div class="scroll-to-bottom-button-container">
+            <UButton
+              v-if="showScrollButton"
+              color="neutral"
+              variant="outline"
+              icon="i-heroicons-arrow-down"
+              class="rounded-full shadow-sm"
+              @click="() => scrollToBottom()"
+            />
+          </div>
           <ChatInput @send-message="handleSendMessage" />
         </div>
       </template>
@@ -117,9 +136,7 @@ function handleSendMessage(message: string) {
   position: fixed;
   bottom: 1.5rem;
   max-width: 800px;
-  width: calc(
-    100% - 3rem
-  ); /* Account for container padding */
+  width: calc(100% - 3rem); /* Account for container padding */
   z-index: 10;
 }
 
