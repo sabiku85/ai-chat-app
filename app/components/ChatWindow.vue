@@ -1,19 +1,31 @@
 <script setup lang="ts">
-const { chat, messages, sendMessage } = useChat()
-const { showScrollButton, scrollToBottom, pinToBottom } =
-  useChatScroll()
+import type { ChatMessage, Chat } from "../types";
+
+const props = defineProps<{
+  messages: ChatMessage[];
+  chat: Chat;
+}>();
+const emit = defineEmits(["send-message"]);
+
+const { showScrollButton, scrollToBottom, pinToBottom } = useChatScroll();
 
 function handleSendMessage(message: string) {
-  sendMessage(message)
+  emit("send-message", message);
 }
 
-watch(() => messages.value, pinToBottom, { deep: true })
+watch(() => props.messages, pinToBottom, { deep: true });
 </script>
 
 <template>
-  <div ref="scrollContainer" class="scroll-container">
+  <div
+    ref="scrollContainer"
+    class="scroll-container"
+  >
     <UContainer class="chat-container">
-      <div v-if="!messages?.length" class="empty-state">
+      <div
+        v-if="!messages?.length"
+        class="empty-state"
+      >
         <div class="empty-state-card">
           <h2 class="empty-state-title">Start your chat</h2>
           <ChatInput @send-message="handleSendMessage" />
@@ -23,7 +35,7 @@ watch(() => messages.value, pinToBottom, { deep: true })
       <template v-else>
         <div class="chat-header">
           <h1 class="title">
-            {{ chat?.title || 'Untitled Chat' }}
+            {{ chat?.title || "Untitled Chat" }}
           </h1>
         </div>
         <div class="messages-container">
@@ -131,9 +143,7 @@ watch(() => messages.value, pinToBottom, { deep: true })
   position: fixed;
   bottom: 1.5rem;
   max-width: 800px;
-  width: calc(
-    100% - 3rem
-  ); /* Account for container padding */
+  width: calc(100% - 3rem); /* Account for container padding */
   z-index: 10;
 }
 

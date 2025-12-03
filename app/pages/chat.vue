@@ -1,3 +1,11 @@
+<script setup lang="ts">
+const { chat, messages, sendMessage } = useChat();
+</script>
+
 <template>
-  <ChatWindow />
+  <ChatWindow
+    :chat
+    :messages
+    @send-message="sendMessage"
+  />
 </template>
